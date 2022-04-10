@@ -21,30 +21,26 @@ export default async(req, res) => {
             src: document.querySelector(".img img").attributes.src,
             alt: document.querySelector(".img img").attributes.alt
         },
-        contents: [...document.querySelectorAll(".editor > *:not(#inline_ad)")]
-            .map( (dom) => {
-                const { textContent, childNodes } = dom;
-                const text = textContent.trim();
+        contents: [...document.querySelectorAll(".editor > *:not(#inline_ad)")].map( (dom) => {
+                // const { textContent } = dom;
+                const text = dom.textContent.trim();
                 // Image module
-                const img_sources = [...dom.querySelectorAll("img")];
-                const is_image = img_sources.length > 0;
-                let images = [];
-                if( is_image ) {
-                    images = img_sources.map( (dom) => {
-                        const { src, alt } = dom.attributes;
-                        return { src, alt };
-                    });
-                }
+                const images = [...dom.querySelectorAll("img")].map( (dom) => {
+                    const { src, alt } = dom.attributes;
+                    return { src, alt };
+                });
                 // Link module
-                const links = [...dom.querySelectorAll("a")]
-                    .map( ( its ) => ({
-                        href: its.attributes.href,
-                        text: its.textContent
-                    }) );
-                const passed = /googletag/g.test(textContent) === false;
+                const links = [...dom.querySelectorAll("a")].map( ( its ) => ({
+                    href: its.attributes.href,
+                    text: its.textContent
+                }) );
                 // Build result
-                const result = { text, images, links, passed, };
-                if( text.trim() === "" ) {
+                const result = {
+                    text,
+                    images,
+                    links,
+                };
+                if( text === "" ) {
                     delete result.text;
                 }
                 if( images.length < 1 ) {
@@ -54,9 +50,7 @@ export default async(req, res) => {
                     delete result.links;
                 }
                 return result;
-            })
-            .filter( (item) => item.passed  && Object.keys(item).length > 1 )
-            .map( ({ passed, ...rest }) => ({ ...rest }) ),
+            }).filter( (item) => Object.keys(item).length > 0 )
     };
     res.jsonp(result);
 }
