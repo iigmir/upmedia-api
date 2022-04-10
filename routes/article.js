@@ -22,30 +22,32 @@ export default async(req, res) => {
             alt: document.querySelector(".img img").attributes.alt
         },
         contents: [...document.querySelectorAll(".editor > *:not(#inline_ad)")]
-            .map( ({ textContent, childNodes }) => {
-                let passed = true;
-                const is_image = childNodes[0].tagName === "IMG";
+            .map( (dom) => {
+                const { textContent, childNodes } = dom;
+                const empty_text = textContent.trim() === "";
+                const script = /googletag/g.test( textContent );
+                const passed = !empty_text && !script;
+                // Image module
+                const img_sources = [...dom.querySelectorAll("img")];
+                const is_image = img_sources.length > 0;
+                let images = [];
                 if( is_image ) {
-                    return {
-                        image: childNodes[0].attributes.src,
-                        passed
-                    };
+                    images = img_sources.map( ({ attributes }) => {
+                        const { src, alt } = attributes;
+                        return { src, alt };
+                    });
                 }
+                // Link module
                 const has_link = childNodes.filter( ({ tagName }) => tagName === "A" ).length > 0;
-                const not_empty_text = textContent.trim() !== "";
-                const not_script = /googletag/g.test( textContent ) === false;
-                if( not_empty_text && not_script ) {
-                    const result = {
-                        text: textContent,
-                        passed
-                    };
-                    if( has_link ) {
-                        result.links = childNodes.filter( ({ tagName }) => tagName === "A" ).map( GetLink );
-                    }
-                    return result;
+                const result = {
+                    text: textContent,
+                    passed,
+                    images
+                };
+                if( has_link ) {
+                    result.links = childNodes.filter( ({ tagName }) => tagName === "A" ).map( GetLink );
                 }
-                passed = false;
-                return { passed };
+                return result;
             })
             .filter( ({ passed }) => passed )
             .map( ({ passed, ...rest }) => ({ ...rest }) ),
