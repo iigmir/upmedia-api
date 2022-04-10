@@ -52,7 +52,7 @@ export default async(req, res) => {
             src: document.querySelector(".img img").attributes.src,
             alt: document.querySelector(".img img").attributes.alt
         },
-        contents: [...document.querySelectorAll(".editor > *:not(#inline_ad)")]
+        contents: [...document.querySelectorAll(".editor > *:not(#inline_ad, #SignatureSN)")]
             .map( BuildContents )
             .filter( (item) => Object.keys(item).length > 0 ),
     };
