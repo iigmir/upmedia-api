@@ -24,32 +24,34 @@ export default async(req, res) => {
         contents: [...document.querySelectorAll(".editor > *:not(#inline_ad)")]
             .map( (dom) => {
                 const { textContent, childNodes } = dom;
-                const empty_text = textContent.trim() === "";
-                const script = /googletag/g.test( textContent );
-                const passed = !empty_text && !script;
+                const text = textContent.trim();
                 // Image module
                 const img_sources = [...dom.querySelectorAll("img")];
                 const is_image = img_sources.length > 0;
                 let images = [];
                 if( is_image ) {
-                    images = img_sources.map( ({ attributes }) => {
-                        const { src, alt } = attributes;
+                    images = img_sources.map( (dom) => {
+                        const { src, alt } = dom.attributes;
                         return { src, alt };
                     });
                 }
                 // Link module
-                const has_link = childNodes.filter( ({ tagName }) => tagName === "A" ).length > 0;
-                const result = {
-                    text: textContent,
-                    passed,
-                    images
-                };
-                if( has_link ) {
-                    result.links = childNodes.filter( ({ tagName }) => tagName === "A" ).map( GetLink );
+                const links = childNodes.filter( ({ tagName }) => tagName === "A" ).map( GetLink );
+                const passed = /googletag/g.test(textContent) === false;
+                // Build result
+                const result = { text, images, links, passed, };
+                if( text.trim() === "" ) {
+                    delete result.text;
+                }
+                if( images.length < 1 ) {
+                    delete result.images;
+                }
+                if( links.length < 1 ) {
+                    delete result.links;
                 }
                 return result;
             })
-            .filter( ({ passed }) => passed )
+            .filter( (item) => item.passed  && Object.keys(item).length > 1 )
             .map( ({ passed, ...rest }) => ({ ...rest }) ),
     };
     res.jsonp(result);
