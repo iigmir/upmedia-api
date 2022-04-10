@@ -34,3 +34,23 @@ export const SearchPage = (sh_keyword, currentPage = "1") => {
         }).then( (r) => resolve(r) ).catch( error => reject(error) );
     } );
 };
+
+/**
+ * Get Article HTML
+ * @param {String} SerialNo 
+ * @param {String} Type 
+ * @returns 
+ */
+export const ArticlePage = (SerialNo = "2", Type = "") => {
+    return new Promise( (resolve, reject) => {
+        axios({
+            baseURL,
+            method: "GET",
+            url: "/news_info.php",
+            params: {
+                SerialNo,
+                Type
+            }
+        }).then( (r) => resolve(r) ).catch( error => reject(error) );
+    } );
+};
