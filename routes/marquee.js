@@ -1,5 +1,5 @@
 import { HomePage } from "../ajax-apis.js";
-import { GetSource as get_source, GeLink as get_link } from "../utils.js";
+import { GetSource as get_source, GetLink as get_link } from "../utils.js";
 import { parse } from "node-html-parser";
 
 export default async(req, res) => {

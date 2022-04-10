@@ -1,5 +1,5 @@
 import { SearchPage } from "../ajax-apis.js";
-import { GetSource, GeLink } from "../utils.js";
+import { GetSource, GetLink } from "../utils.js";
 import { parse } from "node-html-parser";
 
 export default async (req, res) => {
@@ -8,7 +8,7 @@ export default async (req, res) => {
     const document = parse(source.data);
     // [...document.querySelectorAll("#page a")].filter( ({ href }) => /currentPage/.test(href) )
     const links_source = [...document.querySelectorAll("#news-list dd a")];
-    const links = links_source.map(GeLink).filter(({ href }) => href.includes("news_info.php"));
+    const links = links_source.map(GetLink).filter(({ href }) => href.includes("news_info.php"));
     const result = {
         meta: GetSource(source, req),
         keyword,

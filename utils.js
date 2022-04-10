@@ -1,4 +1,4 @@
-export const GeLink = (its) => {
+export const GetLink = (its) => {
     const baseURL = "https://www.upmedia.mg";
     const text = its.text.trim();
     let href = its.attributes.href ?? "";
