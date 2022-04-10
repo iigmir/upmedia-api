@@ -40,9 +40,9 @@ export default async(req, res) => {
         .map(GetLink)
         .map(({ text, type }) => ({ text, id: type }))
     ;
+    const keywords = [...document.querySelectorAll(".label a")].map(GetLink).map(({ text }) => text);
     const result = {
         meta: GetSource(source, req),
-        tags,
         info: {
             title: document.querySelector(".title h1").innerText.trim(),
             author: document.querySelector(".author a").innerText.trim(),
@@ -55,6 +55,9 @@ export default async(req, res) => {
         contents: [...document.querySelectorAll(".editor > *:not(#inline_ad, #SignatureSN)")]
             .map( BuildContents )
             .filter( (item) => Object.keys(item).length > 0 ),
+        see_also: [...document.querySelectorAll(".related a")].map(GetLink),
+        tags,
+        keywords
     };
     res.jsonp(result);
 }
