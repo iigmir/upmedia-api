@@ -36,7 +36,11 @@ export default async(req, res) => {
                     });
                 }
                 // Link module
-                const links = childNodes.filter( ({ tagName }) => tagName === "A" ).map( GetLink );
+                const links = [...dom.querySelectorAll("a")]
+                    .map( ( its ) => ({
+                        href: its.attributes.href,
+                        text: its.textContent
+                    }) );
                 const passed = /googletag/g.test(textContent) === false;
                 // Build result
                 const result = { text, images, links, passed, };
