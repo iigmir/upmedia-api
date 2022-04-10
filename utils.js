@@ -5,13 +5,12 @@ export const GeLink = (its) => {
     if( href.includes( baseURL ) === false ) {
         href = `${baseURL}/${href}`;
     }
-    const result = {
-        href,
-        text
-    };
-    if( href.includes( "SerialNo" ) ) {
-        result.id = href.split("SerialNo=")[1];
+    const url = new URL(href);
+    const params = {
+        id: url.searchParams.get("SerialNo"),
+        type: url.searchParams.get("Type")
     }
+    const result = { href, text, ...params };
     return result;
 };
 
