@@ -41,6 +41,21 @@ export default async(req, res) => {
         .map(({ text, type }) => ({ text, id: type }))
     ;
     const keywords = [...document.querySelectorAll(".label a")].map(GetLink).map(({ text }) => text);
+    const navigation = {};
+    if( document.querySelector(".other .prev img") != null ) {
+        navigation.prev = {
+            text: document.querySelector(".other .prev dd").textContent ?? "",
+            link: document.querySelector(".other .prev").attributes.href ?? "",
+            image: document.querySelector(".other .prev img").attributes.img ?? "",
+        };
+    }
+    if( document.querySelector(".other .next img") != null ) {
+        navigation.next = {
+            text: document.querySelector(".other .next dd").textContent ?? "",
+            link: document.querySelector(".other .next").attributes.href ?? "",
+            image: document.querySelector(".other .next img").attributes.img ?? "",
+        };
+    }
     const result = {
         meta: GetSource(source, req),
         info: {
@@ -57,7 +72,8 @@ export default async(req, res) => {
             .filter( (item) => Object.keys(item).length > 0 ),
         see_also: [...document.querySelectorAll(".related a")].map(GetLink),
         tags,
-        keywords
+        keywords,
+        navigation: navigation
     };
     res.jsonp(result);
 }
