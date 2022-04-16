@@ -16,6 +16,8 @@
     "node-html-parser": "^5.3.3"
   },
   "devDependencies": {
-    "mocha": "^9.2.2"
+    "eslint": "^8.13.0",
+    "mocha": "^9.2.2",
+    "supertest": "^6.2.2"
   }
 }
