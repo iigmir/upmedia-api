@@ -24,6 +24,11 @@ app.get("/marquee", async(req, res) => {
     res.redirect("/hot");
 });
 
+// Unit test: To test if the route success or not.
+app.get("/test", async(req, res) => {
+    res.jsonp({ message: "Hello World" });
+});
+
 // Base resource
 app.get("/", MainNews);
 
