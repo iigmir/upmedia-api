@@ -35,3 +35,5 @@ app.get("/", MainNews);
 app.listen(port, () => {
     console.log(`Please see: http://127.0.0.1:${port}`)
 });
+
+export default app;
