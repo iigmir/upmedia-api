@@ -1,7 +1,7 @@
 import server from "../index.js";
 import supertest from "supertest";
-const requestWithSupertest = supertest(server);
 import { strictEqual } from "assert";
+const requestWithSupertest = supertest(server);
 
 describe( "/article", () => {
     it( "should throw error if no id given", async () => {
