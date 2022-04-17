@@ -10,6 +10,7 @@ describe( "GET /article", () => {
         strictEqual(res.type, 'application/json');
         strictEqual("error" in res.body, true);
     })
+    // FIXME: requestWithSupertest.close is not a function
     // afterEach( (done) => {
     //     requestWithSupertest.close(done);
     // })
