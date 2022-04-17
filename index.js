@@ -32,8 +32,8 @@ app.get("/test", async(req, res) => {
 // Base resource
 app.get("/", MainNews);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Please see: http://127.0.0.1:${port}`)
 });
 
-export default app;
+export default server;
