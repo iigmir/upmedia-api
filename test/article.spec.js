@@ -3,15 +3,15 @@ import supertest from "supertest";
 import { strictEqual } from "assert";
 
 describe( "GET /article", () => {
-    const requestWithSupertest = supertest(server);
+    const request = supertest(server);
     it( "should throw error if no id given", async () => {
-        const res = await requestWithSupertest.get("/article");
+        const res = await request.get("/article");
         strictEqual(res.status, 400);
         strictEqual(res.type, 'application/json');
         strictEqual("error" in res.body, true);
     })
-    // FIXME: requestWithSupertest.close is not a function
+    // FIXME: request.close is not a function
     // afterEach( (done) => {
-    //     requestWithSupertest.close(done);
+    //     request.close(done);
     // })
 })
