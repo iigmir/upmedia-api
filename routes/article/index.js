@@ -8,11 +8,6 @@ export default async(req, res) => {
     const { SerialNo } = req.params;
     const source = await ArticlePage( SerialNo );
     const document = parse( source.data );
-    const tags = [...document.querySelectorAll(".tag a")]
-        .map(GetLink)
-        .map(({ text, type }) => ({ text, id: type }))
-    ;
-    const keywords = [...document.querySelectorAll(".label a")].map(GetLink).map(({ text }) => text);
     const result = {
         meta: GetSource(source, req),
         info: {
@@ -26,8 +21,8 @@ export default async(req, res) => {
         },
         contents: ParseContent( document ),
         see_also: [...document.querySelectorAll(".related a")].map(GetLink),
-        tags,
-        keywords,
+        tags: [...document.querySelectorAll(".tag a")].map(GetLink).map(({ text, type }) => ({ text, id: type })),
+        keywords: [...document.querySelectorAll(".label a")].map(GetLink).map(({ text }) => text),
         navigation: ParseNavigation( document )
     };
     res.jsonp(result);
