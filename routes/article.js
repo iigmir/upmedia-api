@@ -41,26 +41,29 @@ export default async(req, res) => {
         .map(({ text, type }) => ({ text, id: type }))
     ;
     const keywords = [...document.querySelectorAll(".label a")].map(GetLink).map(({ text }) => text);
-    const navigation = {};
-    if( document.querySelector(".other .prev img") != null ) {
-        navigation.prev = {
-            text: document.querySelector(".other .prev dd").textContent ?? "",
-            link: document.querySelector(".other .prev").attributes.href ?? "",
-            image: document.querySelector(".other .prev img").attributes.img ?? "",
-        };
-    }
-    if( document.querySelector(".other .next img") != null ) {
-        navigation.next = {
-            text: document.querySelector(".other .next dd").textContent ?? "",
-            link: document.querySelector(".other .next").attributes.href ?? "",
-            image: document.querySelector(".other .next img").attributes.img ?? "",
-        };
-    }
+    const GenerateNavigation = (document) => {
+        const navigation = {};
+        if( document.querySelector(".other .prev img") != null ) {
+            navigation.prev = {
+                text: document.querySelector(".other .prev dd").textContent ?? "",
+                link: document.querySelector(".other .prev").attributes.href ?? "",
+                image: document.querySelector(".other .prev img").attributes.img ?? "",
+            };
+        }
+        if( document.querySelector(".other .next img") != null ) {
+            navigation.next = {
+                text: document.querySelector(".other .next dd").textContent ?? "",
+                link: document.querySelector(".other .next").attributes.href ?? "",
+                image: document.querySelector(".other .next img").attributes.img ?? "",
+            };
+        }
+        return navigation;
+    };
     const result = {
         meta: GetSource(source, req),
         info: {
-            title: document.querySelector(".title h1").innerText.trim(),
-            author: document.querySelector(".author a").innerText.trim(),
+            title: document.querySelector(".title h1").textContent.trim(),
+            author: document.querySelector(".author a").textContent.trim(),
             date: document.querySelector(".author").lastChild.textContent.trim(),
         },
         head_image: {
@@ -73,7 +76,7 @@ export default async(req, res) => {
         see_also: [...document.querySelectorAll(".related a")].map(GetLink),
         tags,
         keywords,
-        navigation: navigation
+        navigation: GenerateNavigation(document)
     };
     res.jsonp(result);
 }
