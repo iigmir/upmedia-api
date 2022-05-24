@@ -2,7 +2,7 @@
 import SearchNews from "./routes/search.js";
 import HotNews from "./routes/marquee.js";
 import MainNews from "./routes/main.js";
-import NewsArticle from "./routes/article.js";
+import NewsArticle from "./routes/article/index.js";
 import { NoParamGiven } from "./routes/errors.js";
 // Modules
 import express from "express";

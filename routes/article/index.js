@@ -1,5 +1,5 @@
-import { ArticlePage } from "../ajax-apis.js";
-import { GetSource, GetLink } from "../utils.js";
+import { ArticlePage } from "../../ajax-apis.js";
+import { GetSource, GetLink } from "../../utils.js";
 import { parse } from "node-html-parser";
 
 export default async(req, res) => {
