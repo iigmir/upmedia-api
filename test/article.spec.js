@@ -11,7 +11,7 @@ describe( "GET /article", () => {
             noid_result.expect(400, done);
         });
         it( "should get 404 if invaild id given", (done) => {
-            const noid_result = supertest(server).get("/article/3.1415926");
+            const noid_result = supertest(server).get("/article/31415926");
             noid_result.expect(404, done);
         });
     });
