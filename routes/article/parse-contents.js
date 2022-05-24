@@ -1,6 +1,5 @@
 export default (document) => {
     const BuildContents = (dom) => {
-        // const { textContent } = dom;
         const text = dom.textContent.trim();
         // Image module
         const images = [...dom.querySelectorAll("img")].map((dom) => {
@@ -13,21 +12,11 @@ export default (document) => {
             text: its.textContent
         }));
         // Build result
-        const result = {
+        return {
             text,
             images,
             links,
         };
-        if (text === "") {
-            delete result.text;
-        }
-        if (images.length < 1) {
-            delete result.images;
-        }
-        if (links.length < 1) {
-            delete result.links;
-        }
-        return result;
     };
     return [...document.querySelectorAll(".editor > *:not(#inline_ad, #SignatureSN)")]
         .map( BuildContents )
