@@ -1,6 +1,5 @@
 import server from "../index.js";
 import supertest from "supertest";
-import { strictEqual } from "assert";
 
 /**
  * @see https://github.com/visionmedia/supertest/issues/437
