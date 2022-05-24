@@ -1,64 +1,18 @@
 import { ArticlePage } from "../../ajax-apis.js";
 import { GetSource, GetLink } from "../../utils.js";
 import { parse } from "node-html-parser";
+import ParseContent from "./parse-contents.js";
+import ParseNavigation from "./parse-navigation.js";
 
 export default async(req, res) => {
     const { SerialNo } = req.params;
     const source = await ArticlePage( SerialNo );
     const document = parse( source.data );
-    const BuildContents = (dom) => {
-        // const { textContent } = dom;
-        const text = dom.textContent.trim();
-        // Image module
-        const images = [...dom.querySelectorAll("img")].map((dom) => {
-            const { src, alt } = dom.attributes;
-            return { src, alt };
-        });
-        // Link module
-        const links = [...dom.querySelectorAll("a")].map((its) => ({
-            href: its.attributes.href,
-            text: its.textContent
-        }));
-        // Build result
-        const result = {
-            text,
-            images,
-            links,
-        };
-        if (text === "") {
-            delete result.text;
-        }
-        if (images.length < 1) {
-            delete result.images;
-        }
-        if (links.length < 1) {
-            delete result.links;
-        }
-        return result;
-    };
     const tags = [...document.querySelectorAll(".tag a")]
         .map(GetLink)
         .map(({ text, type }) => ({ text, id: type }))
     ;
     const keywords = [...document.querySelectorAll(".label a")].map(GetLink).map(({ text }) => text);
-    const GenerateNavigation = (document) => {
-        const navigation = {};
-        if( document.querySelector(".other .prev img") != null ) {
-            navigation.prev = {
-                text: document.querySelector(".other .prev dd").textContent ?? "",
-                link: document.querySelector(".other .prev").attributes.href ?? "",
-                image: document.querySelector(".other .prev img").attributes.img ?? "",
-            };
-        }
-        if( document.querySelector(".other .next img") != null ) {
-            navigation.next = {
-                text: document.querySelector(".other .next dd").textContent ?? "",
-                link: document.querySelector(".other .next").attributes.href ?? "",
-                image: document.querySelector(".other .next img").attributes.img ?? "",
-            };
-        }
-        return navigation;
-    };
     const result = {
         meta: GetSource(source, req),
         info: {
@@ -70,13 +24,11 @@ export default async(req, res) => {
             src: document.querySelector(".img img").attributes.src,
             alt: document.querySelector(".img img").attributes.alt
         },
-        contents: [...document.querySelectorAll(".editor > *:not(#inline_ad, #SignatureSN)")]
-            .map( BuildContents )
-            .filter( (item) => Object.keys(item).length > 0 ),
+        contents: ParseContent( document ),
         see_also: [...document.querySelectorAll(".related a")].map(GetLink),
         tags,
         keywords,
-        navigation: GenerateNavigation(document)
+        navigation: ParseNavigation( document )
     };
     res.jsonp(result);
 }
