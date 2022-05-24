@@ -10,7 +10,6 @@ export default async(req, res) => {
     const source = await ArticlePage( SerialNo );
     const document = parse( source.data );
     const info = ParseInfo(document);
-    console.log(info);
     if( info.error === true ) {
         res.status(404);
         res.jsonp({ error: info });
