@@ -8,11 +8,9 @@ describe( "GET /article", async () => {
     it( "should get 400 if no id given", (done) => {
         const noid_result = supertest(server).get("/article");
         noid_result.expect(400, done);
-        // strictEqual(noid_result.status, 400);
-        // strictEqual("error" in noid_result.body, true);
     });
     it( "should get 404 if invaild id given", (done) => {
-        const noid_result = supertest(server).get("/article");
+        const noid_result = supertest(server).get("/article/3.1415926");
         noid_result.expect(404, done);
     });
     it( "should get success if article given", (done) => {
